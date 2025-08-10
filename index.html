@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive 30-Day DV360 Training Curriculum</title>
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A three-panel layout is used to create a clear and intuitive learning environment. The left panel serves as a persistent, hierarchical navigation menu, allowing users to easily switch between phases and days. The center panel is the primary content display, presenting the detailed curriculum for the selected day. The right panel features a dynamic, interactive visualization (using Chart.js or styled HTML) that conceptually represents the day's topic. This structure separates navigation from content, prevents cognitive overload, and uses visual aids to reinforce complex concepts, making the curriculum more explorable and engaging than a static document. -->
+    <!-- Visualization & Content Choices: The application translates abstract training concepts into visual and interactive elements. For example: Day 1 (Ecosystem) -> Goal: Organize -> Viz: A simple HTML bar chart showing relevance of key components -> Interaction: Hover tooltips -> Justification: Visually represents the interconnected nature of the ecosystem and its core components in an easy-to-understand format. Day 2 (Hierarchy) -> Goal: Organize -> Viz: Styled HTML/Flexbox diagram -> Interaction: Hover effects -> Justification: Clearly illustrates the tiered relationships in a tangible way. Day 13 (Key Metrics) -> Goal: Compare -> Viz: Simple HTML bar chart -> Justification: Allows for easy comparison of abstract performance metrics without complex chart types. This approach makes learning active rather than passive. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        .nav-item.active {
+            background-color: #e0f2fe; /* sky-100 */
+            color: #0c4a6e; /* sky-900 */
+            font-weight: 600;
+        }
+        .phase-header.active {
+            background-color: #f0f9ff; /* sky-50 */
+        }
+        .hierarchy-item {
+            transition: all 0.2s ease-in-out;
+        }
+        .hierarchy-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="app" class="flex flex-col md:flex-row min-h-screen">
+        
+        <!-- Left Navigation Panel -->
+        <nav id="navigation-panel" class="w-full md:w-1/4 lg:w-1/5 bg-white border-r border-slate-200 p-4 md:p-6 flex-shrink-0">
+            <h1 class="text-xl font-bold text-sky-800 mb-2">DV360 Curriculum</h1>
+            <p class="text-sm text-slate-500 mb-6">Your 30-day interactive learning journey.</p>
+            <div id="nav-accordion">
+                <!-- Navigation items will be injected here by JS -->
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="w-full md:w-3/4 lg:w-4/5 p-4 md:p-8 overflow-y-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Center Content Panel -->
+                <div id="content-panel" class="bg-white p-6 rounded-lg shadow-sm">
+                    <!-- Content will be injected here by JS -->
+                </div>
+
+                <!-- Right Visualization Panel -->
+                <div id="visualization-panel" class="bg-white p-6 rounded-lg shadow-sm flex flex-col justify-center items-center">
+                    <h3 id="viz-title" class="text-lg font-semibold text-slate-700 mb-4 text-center"></h3>
+                    <div id="viz-content" class="w-full h-full flex items-center justify-center">
+                        <!-- Visualization will be injected here by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const curriculumData = [
+            // Phase 1
+            { day: 1, phase: 1, title: "Introduction to Programmatic Advertising", concepts: ["Programmatic Advertising", "Automated Buying/Selling", "Real-Time Bidding (RTB)", "DSP, SSP, Ad Exchange"], explanation: "Programmatic Advertising is the automated buying and selling of ad space. Instead of manual negotiations, technology uses algorithms to bid on ad inventory in milliseconds, much like a stock market for ads. Key players include Demand-Side Platforms (DSPs) like DV360 for buyers, Supply-Side Platforms (SSPs) for sellers (publishers), and Ad Exchanges where the transactions happen via Real-Time Bidding (RTB).", vizType: 'relevancy', vizData: [{label: 'Programmatic Advertising', value: 9}, {label: 'Automated Buying/Selling', value: 8}, {label: 'RTB', value: 7}, {label: 'DSP, SSP, Ad Exchange', value: 7}] },
+            { day: 2, phase: 1, title: "DV360 Interface & Hierarchy", concepts: ["Partner", "Advertiser", "Campaign", "Insertion Order (IO)", "Line Item"], explanation: "The DV360 platform is organized hierarchically to keep campaigns and client data organized. At the top is the **Partner** (your agency), which contains multiple **Advertisers** (your clients). Each Advertiser runs **Campaigns**, which are broad initiatives. Campaigns contain **Insertion Orders (IOs)**, which set budgets and schedules. Finally, IOs contain **Line Items**, the most granular level where targeting and bidding are set.", vizType: 'hierarchy', vizData: { parent: 'Partner', children: ['Advertiser', 'Campaign', 'Insertion Order', 'Line Item'] } },
+            { day: 3, phase: 1, title: "Campaign & Insertion Order Creation", concepts: ["Campaign Objectives", "Flight Dates", "Budgeting", "Pacing"], explanation: "This is where you translate a marketing objective into a plan within the platform. A Campaign defines the overall goal, name, and flight dates. An Insertion Order (IO) is created within a campaign to manage a specific budget and schedule. Pacing controls how quickly the budget is spent, with 'even' pacing spreading it out and 'ahead' or 'ASAP' spending it faster to secure inventory.", vizType: 'flow', vizData: ['Define Objective', 'Create Campaign', 'Set Budget & Dates', 'Create Insertion Order', 'Set Pacing'] },
+            { day: 4, phase: 1, title: "Line Items - The Building Blocks", concepts: ["Display", "Video", "Audio", "Native", "Bidding Strategy"], explanation: "A line item dictates what, where, and to whom an ad is shown. You must choose a line item type based on the creative format you'll be using, such as Display (banners), Video, Audio, or Native. Key settings include the bidding strategy, budget allocation, and assigning the specific creatives that will run.", vizType: 'relevancy', vizData: [{label: 'Display', value: 8}, {label: 'Video', value: 7}, {label: 'Audio', value: 6}, {label: 'Native', value: 6}] },
+            { day: 5, phase: 1, title: "Introduction to Targeting", concepts: ["Demographic", "Geographic", "Audience-based", "Contextual"], explanation: "Targeting allows you to serve ads to the most relevant users, maximizing efficiency. Core targeting types include **Demographic** (age, gender), **Geographic** (country, city), **Audience** (interests, online behavior), and **Contextual** (the topic of the page where the ad appears).", vizType: 'relevancy', vizData: [{label: 'Demographic', value: 7}, {label: 'Geographic', value: 8}, {label: 'Audience-based', value: 10}, {label: 'Contextual', value: 6}] },
+            { day: 6, phase: 1, title: "Audience-Based Targeting", concepts: ["First-Party Data", "Third-Party Data", "Google Audiences", "Combined Audiences"], explanation: "Diving deeper into audience targeting, you can leverage several data sources. **First-party data** is your own customer information (e.g., website visitors). **Third-party data** is purchased from external providers. **Google Audiences** are proprietary segments like Affinity (broad interests) and In-Market (actively researching). You can also create **Combined Audiences** to layer these segments for more precise targeting.", vizType: 'relevancy', vizData: [{label: '1st Party Data', value: 9}, {label: '3rd Party Data', value: 7}, {label: 'Google Audiences', value: 8}, {label: 'Combined Audiences', value: 9}] },
+            { day: 7, phase: 1, title: "Creative Management", concepts: ["Ad Formats", "HTML5", "Video Specs", "Creative Assignment"], explanation: "Creatives are the actual ads that users see. It's crucial to adhere to the specifications for each ad format, whether it's a standard banner, an interactive HTML5 unit, or a video. Once creatives are uploaded to the platform, they must be assigned to the appropriate line items to serve.", vizType: 'text', vizData: "Adherence to creative specs is non-negotiable for approval and proper rendering." },
+            { day: 8, phase: 1, title: "Brand Safety & Ad Fraud", concepts: ["Pre-bid Settings", "Keyword Exclusion", "Verification Vendors", "Brand Suitability"], explanation: "DV360 has built-in tools to protect a brand's reputation and ad spend. You can use pre-bid settings to avoid unsafe inventory, apply keyword exclusion lists to prevent ads from appearing next to undesirable content, and integrate with third-party verification vendors to measure viewability and detect fraud.", vizType: 'relevancy', vizData: [{label: 'Pre-bid Filters', value: 9}, {label: 'Exclusion Lists', value: 8}, {label: 'Verification', value: 7}, {label: 'Content Labels', value: 8}] },
+            { day: 9, phase: 1, title: "Floodlight Tags & Conversion Tracking", concepts: ["Conversion Tracking", "Retargeting Lists", "Floodlight Activities"], explanation: "Floodlight tags are snippets of code placed on a website to track user actions, such as making a purchase or filling out a form. These 'Floodlight Activities' are crucial for measuring campaign success (conversions) and for building first-party audience lists for retargeting users who have previously engaged with your site.", vizType: 'flow', vizData: ['User Visits Site', 'Floodlight Tag Fires', 'Conversion Recorded', 'User Added to Audience'] },
+            { day: 10, phase: 1, title: "Phase 1 Review & Practical Exercise", concepts: ["Campaign Setup", "Targeting Application", "Creative Assignment"], explanation: "A comprehensive review of the first 9 days. **Practical Exercise:** Given a mock client brief for a new product launch, build a complete campaign structure. This includes creating the Advertiser, Campaign, Insertion Order, and a Line Item with appropriate targeting (e.g., geographic, demographic, in-market audience) and assigning a placeholder creative.", vizType: 'text', vizData: "Time to apply your knowledge! Open the platform and build a campaign for 'Eco-Friendly Sneakers' targeting 18-34 year olds in California." },
+            // Phase 2
+            { day: 11, phase: 2, title: "Introduction to Bidding Strategies", concepts: ["Manual Bidding", "Automated Bidding", "Target CPA", "Maximize Conversions"], explanation: "DV360 offers various bidding strategies to achieve different goals. **Manual Bidding** gives you full control over the price you pay. **Automated Bidding** uses Google's machine learning to optimize for a specific outcome, such as achieving a **Target CPA (Cost Per Acquisition)** or aiming to **Maximize Conversions** within your budget.", vizType: 'relevancy', vizData: [{label: 'Manual Bidding', value: 6}, {label: 'Automated Bidding', value: 9}, {label: 'Target CPA', value: 8}, {label: 'Maximize Conversions', value: 7}] },
+            { day: 12, phase: 2, title: "Frequency & Pacing", concepts: ["Frequency Capping", "Pacing", "User Experience", "Budget Management"], explanation: "These controls are vital for a good user experience and effective budget management. **Frequency Capping** limits how many times a unique user sees your ad in a given period, preventing ad fatigue. **Pacing** controls the rate at which an Insertion Order's budget is spent. 'Even' pacing spreads it out, while 'Ahead' or 'ASAP' spending is more aggressive.", vizType: 'text', vizData: "A good frequency cap might be 3 impressions per user per day." },
+            { day: 13, phase: 2, title: "Introduction to Optimization", concepts: ["KPIs", "CTR", "CPC", "CPA", "ROAS"], explanation: "Optimization is a continuous process of making data-driven adjustments to improve campaign performance. This involves monitoring Key Performance Indicators (KPIs) like **CTR (Click-Through Rate)**, **CPC (Cost Per Click)**, **CPA (Cost Per Acquisition)**, and **ROAS (Return On Ad Spend)** and making changes to improve them.", vizType: 'relevancy', vizData: [{label: 'CTR', value: 7}, {label: 'CPC', value: 6}, {label: 'CPA', value: 9}, {label: 'ROAS', value: 10}, {label: 'Viewability', value: 8}] },
+            { day: 14, phase: 2, title: "Creative Optimization", concepts: ["A/B Testing", "Creative Rotation", "Dynamic Creative"], explanation: "Testing and improving ad creatives is key. **A/B Testing** involves running two or more versions of an ad to see which performs better. You can set creatives to rotate evenly or have DV360 optimize for the best-performing one. **Dynamic Creative Optimization (DCO)** allows for creating personalized ads at scale by swapping out elements like images and text based on user data.", vizType: 'text', vizData: "Always test at least two different headlines or images in your creatives." },
+            { day: 15, phase: 2, title: "Targeting & Bidding Optimization", concepts: ["Excluding Underperformers", "Bid Adjustments", "Audience Expansion"], explanation: "Use campaign data to refine targeting and bids. Analyze performance reports to identify and **exclude underperforming websites or apps**. Increase bids for high-performing audiences or geographic locations. If performance is strong, consider **expanding your audience targeting** to find new potential customers.", vizType: 'flow', vizData: ['Analyze Report', 'Identify Outliers', 'Adjust Bids/Exclusions', 'Monitor Impact'] },
+            { day: 16, phase: 2, title: "Marketplace & Deals", concepts: ["Private Marketplace (PMP)", "Programmatic Guaranteed (PG)", "Premium Inventory"], explanation: "The Marketplace in DV360 allows for direct, pre-negotiated deals with publishers, providing access to premium inventory not always available in the open auction. A **Private Marketplace (PMP)** is an invite-only auction. **Programmatic Guaranteed (PG)** is a fixed-price deal with a guaranteed number of impressions, offering predictability and brand safety.", vizType: 'relevancy', vizData: [{label: 'Open Auction', value: 7}, {label: 'PMP', value: 8}, {label: 'Programmatic Guaranteed', value: 9}] },
+            { day: 17, phase: 2, title: "YouTube on DV360", concepts: ["TrueView", "Bumper Ads", "Advanced Targeting"], explanation: "While Google Ads can manage YouTube campaigns, DV360 offers more advanced targeting and reporting capabilities, including layering third-party audience data. Common formats include **TrueView** (skippable in-stream ads) and **Bumper Ads** (6-second non-skippable ads).", vizType: 'text', vizData: "DV360 is the preferred platform for large, data-rich YouTube campaigns." },
+            { day: 18, phase: 2, title: "Cross-Device Targeting", concepts: ["User Journey", "Google Graph", "Cohesive Messaging"], explanation: "DV360 uses Google's device graph to connect a user's activity across their phone, tablet, and desktop. This allows for delivering a cohesive ad experience, such as showing an initial awareness ad on mobile and a retargeting ad on desktop. It also enables more accurate cross-device frequency capping.", vizType: 'hierarchy', vizData: { parent: 'User', children: ['Mobile', 'Desktop', 'Tablet', 'CTV'] } },
+            { day: 19, phase: 2, title: "Troubleshooting Common Issues", concepts: ["Low Delivery", "High CPA", "Low CTR", "Troubleshooting Checklist"], explanation: "Common campaign problems include low delivery (not spending the budget), high costs, or a low click-through rate. A standard troubleshooting checklist includes: checking line item status (is it active?), reviewing budget and pacing, ensuring targeting isn't too narrow, and verifying creatives are approved.", vizType: 'text', vizData: "First step in troubleshooting: check if the line item is active and has an approved creative." },
+            { day: 20, phase: 2, title: "Phase 2 Review & Practical Exercise", concepts: ["Performance Analysis", "Optimization Actions"], explanation: "A comprehensive review of the second phase. **Practical Exercise:** You are given a campaign report showing a high CPA on mobile devices and a low CTR on a specific list of websites. Propose and execute optimization actions, such as applying a negative bid modifier for mobile and excluding the underperforming websites.", vizType: 'text', vizData: "Time to optimize! Analyze the provided report and make at least two data-driven changes to the campaign." },
+            // Phase 3
+            { day: 21, phase: 3, title: "Reporting & Analytics", concepts: ["Instant Reporting", "Offline Reports", "Dimensions", "Metrics"], explanation: "DV360 offers robust reporting tools. **Instant Reporting** provides quick, customizable reports within the UI. For more complex queries, you can build **Offline Reports**. The key is understanding **Dimensions** (what you are measuring, e.g., 'Website') and **Metrics** (the numbers, e.g., 'Impressions', 'Clicks').", vizType: 'hierarchy', vizData: { parent: 'Report', children: ['Dimensions', 'Metrics', 'Filters', 'Schedule'] } },
+            { day: 22, phase: 3, title: "Creating and Customizing Reports", concepts: ["Report Builder", "Scheduling", "Answering Business Questions"], explanation: "Learn to use the Report Builder to create custom reports that answer specific business questions. For example, a 'Creative Performance' report would use 'Creative Name' as a dimension and 'CTR' and 'Conversions' as metrics. Reports can be scheduled to run daily, weekly, or monthly and emailed to stakeholders.", vizType: 'text', vizData: "A good report tells a story with data." },
+            { day: 23, phase: 3, title: "Data Transfer & Data Warehousing", concepts: ["Raw Data", "BigQuery", "Advanced Analysis"], explanation: "For enterprise-level clients, raw, event-level data can be exported via **Data Transfer** files. These massive files can be loaded into a data warehouse like **Google BigQuery** for highly advanced analysis, such as building custom attribution models or joining ad data with CRM data.", vizType: 'flow', vizData: ['DV360 Data', 'Data Transfer', 'BigQuery', 'Custom Analysis'] },
+            { day: 24, phase: 3, title: "Integration with Other Google Products", concepts: ["Campaign Manager 360", "Google Analytics 360", "Unified Platform"], explanation: "DV360 seamlessly integrates with other Google Marketing Platform products for a unified workflow. **Campaign Manager 360** is often used for centralized ad serving and reporting. **Google Analytics 360** provides deep website behavior insights that can be used to create powerful audience lists for DV360.", vizType: 'relevancy', vizData: [{label: 'DV360', value: 10}, {label: 'GA360', value: 8}, {label: 'CM360', value: 8}, {label: 'Ads Data Hub', value: 6}, {label: 'Search Ads 360', value: 6}] },
+            { day: 25, phase: 3, title: "Attribution Models", concepts: ["Last-Click", "Linear", "Time Decay", "Data-Driven"], explanation: "Attribution models determine how credit for conversions is assigned to different touchpoints in the user journey. Common models include **Last-Click** (gives all credit to the final ad), **Linear** (distributes credit evenly), and **Data-Driven** (uses machine learning to assign credit based on actual contribution).", vizType: 'relevancy', vizData: [{label: 'Last-Click', value: 4}, {label: 'First-Click', value: 4}, {label: 'Linear', value: 6}, {label: 'Time Decay', value: 7}, {label: 'Data-Driven', value: 10}] },
+            { day: 26, phase: 3, title: "Custom Bidding", concepts: ["Custom Algorithms", "Python/JavaScript", "Advanced Optimization"], explanation: "Custom Bidding allows you to create your own bidding logic using a script (often based on Python or JavaScript). This is an advanced feature used to optimize towards specific business goals that aren't covered by standard automated bidding strategies, such as bidding based on a predicted customer lifetime value.", vizType: 'text', vizData: "Custom Bidding requires data science and engineering resources." },
+            { day: 27, phase: 3, title: "Programmatic Digital Out-of-Home (pDOOH)", concepts: ["Digital Billboards", "Location-based", "Brand Awareness"], explanation: "Programmatic has expanded beyond online ads to physical digital screens like billboards in airports and city squares. **pDOOH** allows for the automated buying of this inventory, often using location-based data to reach people in specific real-world contexts. It is primarily used for large-scale brand awareness campaigns.", vizType: 'text', vizData: "Imagine changing a billboard's ad based on the weather. That's pDOOH." },
+            { day: 28, phase: 3, title: "API & Automation", concepts: ["Application Programming Interface", "Bulk Actions", "Efficiency at Scale"], explanation: "The DV360 **API (Application Programming Interface)** allows developers to programmatically interact with the platform. This is used by large agencies and tech teams to automate tasks at scale, such as creating hundreds of line items, pulling custom reports, or making bulk changes across many campaigns.", vizType: 'flow', vizData: ['Define Task', 'Write Script', 'Execute via API', 'Automate Workflow'] },
+            { day: 29, phase: 3, title: "Final Review & Q&A", concepts: ["Consolidation", "Best Practices", "Strategic Thinking"], explanation: "A final, comprehensive review of all three phases, from foundational concepts to advanced features. This session focuses on consolidating knowledge, discussing strategic best practices, and answering any remaining questions to ensure a holistic understanding of the platform.", vizType: 'text', vizData: "Ask anything! This is your chance to clarify any topic from the past 28 days." },
+            { day: 30, phase: 3, title: "Final Assessment & Certification", concepts: ["Knowledge Evaluation", "Practical Application", "Certification"], explanation: "A final day for a comprehensive assessment of the training material. This typically involves a final case study or a quiz to test knowledge and practical application of DV360 concepts. Upon successful completion, trainees are recognized for their new expertise.", vizType: 'text', vizData: "Congratulations! You've completed the 30-day journey to becoming a DV360 expert." },
+        ];
+
+        const navAccordion = document.getElementById('nav-accordion');
+        const contentPanel = document.getElementById('content-panel');
+        const vizPanel = document.getElementById('visualization-panel');
+        const vizContent = document.getElementById('viz-content');
+        const vizTitle = document.getElementById('viz-title');
+        let currentChart = null;
+
+        function createRelevancyViz(data) {
+            let html = `<div class="w-full flex flex-col items-start space-y-4 text-sm p-4">`;
+            data.forEach(item => {
+                const width = `${item.value * 10}%`;
+                html += `
+                    <div class="w-full">
+                        <p class="text-slate-600 font-medium mb-1">${item.label}</p>
+                        <div class="w-full bg-slate-200 rounded-full h-2.5">
+                            <div class="bg-sky-600 h-2.5 rounded-full transition-all duration-500 ease-in-out" style="width: ${width};"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            return html;
+        }
+
+        function createHierarchyViz(data) {
+            const parent = data.parent || 'Parent';
+            const children = data.children || [];
+            let html = `<div class="w-full flex flex-col items-center space-y-4">`;
+            html += `<div class="hierarchy-item bg-sky-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md">${parent}</div>`;
+            if (children.length > 0) {
+                html += `<div class="w-px h-8 bg-slate-300"></div>`;
+                html += `<div class="flex flex-wrap justify-center gap-4">`;
+                children.forEach(child => {
+                    html += `<div class="hierarchy-item bg-slate-100 text-slate-700 py-2 px-4 rounded-lg shadow-sm">${child}</div>`;
+                });
+                html += `</div>`;
+            }
+            html += `</div>`;
+            return html;
+        }
+
+        function createFlowViz(steps) {
+            let html = `<div class="w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0">`;
+            steps.forEach((step, index) => {
+                html += `<div class="hierarchy-item flex items-center justify-center bg-white border-2 border-sky-200 text-sky-800 text-sm text-center w-32 h-20 rounded-lg p-2 shadow-sm">${step}</div>`;
+                if (index < steps.length - 1) {
+                    html += `<div class="hidden md:block text-sky-400 text-2xl font-light mx-2">→</div>`;
+                    html += `<div class="block md:hidden text-sky-400 text-2xl font-light my-1">↓</div>`;
+                }
+            });
+            html += `</div>`;
+            return html;
+        }
+        
+        function createTextViz(text) {
+            return `<div class="text-center text-slate-600 italic p-4 border-l-4 border-sky-300 bg-sky-50 rounded-r-lg">"${text}"</div>`;
+        }
+
+        function renderVisualization(dayData) {
+            if (currentChart) {
+                currentChart.destroy();
+                currentChart = null;
+            }
+            vizContent.innerHTML = '';
+            vizTitle.textContent = `Concept Visualizer: ${dayData.title}`;
+
+            switch(dayData.vizType) {
+                case 'hierarchy':
+                    vizContent.innerHTML = createHierarchyViz(dayData.vizData || { parent: 'Hierarchy', children: dayData.concepts });
+                    break;
+                case 'flow':
+                    vizContent.innerHTML = createFlowViz(dayData.vizData || dayData.concepts);
+                    break;
+                case 'text':
+                    vizContent.innerHTML = createTextViz(dayData.vizData || "Key takeaway for the day.");
+                    break;
+                case 'relevancy':
+                    vizContent.innerHTML = createRelevancyViz(dayData.vizData);
+                    break;
+                default:
+                    vizContent.innerHTML = `<p class="text-slate-400">No visualization for this topic.</p>`;
+            }
+        }
+
+        function renderContent(day) {
+            const dayData = curriculumData[day - 1];
+            if (!dayData) return;
+
+            let conceptsHtml = dayData.concepts.map(concept => 
+                `<span class="inline-block bg-slate-100 text-slate-700 text-xs font-medium mr-2 mb-2 px-2.5 py-1 rounded-full">${concept}</span>`
+            ).join('');
+
+            contentPanel.innerHTML = `
+                <h2 class="text-2xl font-bold mb-1 text-slate-800">${dayData.title}</h2>
+                <p class="text-sm text-slate-500 mb-4">Day ${dayData.day} | Phase ${dayData.phase}</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-slate-600 mb-2">Key Concepts:</h4>
+                    ${conceptsHtml}
+                </div>
+                <div class="prose prose-slate max-w-none text-slate-700">
+                    <h4 class="font-semibold text-slate-600 mb-2">Explanation:</h4>
+                    <p>${dayData.explanation}</p>
+                </div>
+            `;
+            
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const activeNavItem = document.querySelector(`.nav-item[data-day='${day}']`);
+            if (activeNavItem) {
+                activeNavItem.classList.add('active');
+                
+                // Find the parent phase content and show it
+                const parentPhaseContent = activeNavItem.closest('.phase-content');
+                if (parentPhaseContent) {
+                    parentPhaseContent.classList.remove('hidden');
+                    const parentHeader = parentPhaseContent.previousElementSibling;
+                    parentHeader.classList.add('active');
+                    const icon = parentHeader.querySelector('span:last-child');
+                    icon.classList.add('rotate-180');
+                }
+            }
+            
+            renderVisualization(dayData);
+        }
+
+        function init() {
+            const phases = curriculumData.reduce((acc, item) => {
+                (acc[item.phase] = acc[item.phase] || []).push(item);
+                return acc;
+            }, {});
+
+            let navHtml = '';
+            for (const phaseNum in phases) {
+                navHtml += `
+                    <div class="phase-group mb-2">
+                        <button class="phase-header w-full text-left font-semibold text-slate-700 p-3 rounded-lg hover:bg-slate-100 transition-colors flex justify-between items-center">
+                            <span>Phase ${phaseNum}: ${phaseNum == 1 ? 'Foundation' : (phaseNum == 2 ? 'Execution' : 'Analysis')}</span>
+                            <span class="transform transition-transform duration-200">▼</span>
+                        </button>
+                        <div class="phase-content hidden pl-4 mt-1 space-y-1">
+                `;
+                phases[phaseNum].forEach(day => {
+                    navHtml += `<a href="#" class="nav-item block p-2.5 text-sm text-slate-600 rounded-md hover:bg-slate-100" data-day="${day.day}">Day ${day.day}: ${day.title}</a>`;
+                });
+                navHtml += `</div></div>`;
+            }
+            navAccordion.innerHTML = navHtml;
+
+            navAccordion.addEventListener('click', e => {
+                e.preventDefault();
+                if (e.target.closest('.nav-item')) {
+                    const day = e.target.closest('.nav-item').dataset.day;
+                    renderContent(day);
+                } else if (e.target.closest('.phase-header')) {
+                    const header = e.target.closest('.phase-header');
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('span:last-child');
+                    content.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-180');
+                    header.classList.toggle('active');
+                }
+            });
+
+            // Open first phase and load first day by default
+            const firstPhaseHeader = document.querySelector('.phase-header');
+            firstPhaseHeader.click();
+            renderContent(1);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
