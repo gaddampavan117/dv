@@ -185,7 +185,7 @@
                     vizContent.innerHTML = '<div class="chart-container"><canvas id="vizCanvas"></canvas></div>';
                     const ctx = document.getElementById('vizCanvas').getContext('2d');
                     let datasets;
-                    if (dayData.vizType === 'bar' && dayData.vizData.manual) { // Special case for Day 11 comparison
+                    if (dayData.vizType === 'bar' && dayData.vizData.manual) {
                         datasets = [
                             { label: 'Manual Bidding', data: dayData.vizData.manual, backgroundColor: '#38bdf8' },
                             { label: 'Automated Bidding', data: dayData.vizData.automated, backgroundColor: '#0284c7' }
